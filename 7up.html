@@ -183,9 +183,11 @@
                 (sum === 7 && guess === "exact")) {
                 resultText += "You Won!";
                 wallet += bet;
+                console.log(`Won | Bet Amount: Rs.${bet}`);
             } else {
                 resultText += "You Lose!";
                 wallet -= bet;
+                console.log(`Lose | Bet Amount: Rs.${bet}`);
             }
 
             updateWallet();
