@@ -105,13 +105,13 @@
             <button onclick="rollDice()">Submit</button>
         </div>
         <div class="dice">
-            <img id="dice1" src="../assets/dice1.png" alt="Dice 1">
-            <img id="dice2" src="../assets/dice1.png" alt="Dice 2">
+            <img id="dice1" src="./assets/dice1.png" alt="Dice 1">
+            <img id="dice2" src="./assets/dice1.png" alt="Dice 2">
         </div>
         <div class="result" id="result"></div>
     </div>
 
-    <audio id="dice-sound" src="../assets/diceroll.mp3" preload="auto"></audio>
+    <audio id="dice-sound" src="./assets/diceroll.mp3" preload="auto"></audio>
 
     <script>
         let guess = "";
@@ -174,8 +174,8 @@
             const d2 = Math.floor(Math.random() * 6) + 1;
             const sum = d1 + d2;
 
-            document.getElementById("dice1").src = `../assets/dice${d1}.png`;
-            document.getElementById("dice2").src = `../assets/dice${d2}.png`;
+            document.getElementById("dice1").src = `./assets/dice${d1}.png`;
+            document.getElementById("dice2").src = `./assets/dice${d2}.png`;
 
             let resultText = `You rolled ${d1} + ${d2} = ${sum}. `;
             if ((sum > 7 && guess === "above") ||
