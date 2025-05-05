@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven Up Seven Down</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: repeating-linear-gradient(white, orange, purple);
+        }
+
+        .choices {
+            display: flex;
+            justify-content: flex-start;
+            text-align: center;
+            margin-top: 30px;
+            gap: 70px;
+            padding-left: 20px;
+        }
+
+        .seven-up,
+        .seven,
+        .seven-down {
+            height: 200px;
+            width: 200px;
+            border-radius: 10px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: black;
+            cursor: pointer;
+            border: none;
+        }
+
+        .player {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .text {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .text button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .dice {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .dice img {
+            width: 100px;
+            height: 100px;
+            margin: 0 10px;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+
+        .wallet {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="wallet">
+            Wallet: Rs.100
+        </div>
+        <div class="choices">
+            <div class="seven-up">7 Up</div>
+            <div class="seven">7</div>
+            <div class="seven-down">7 Down</div>
+        </div>
+        <div class="text">
+            <label for="enter">Enter Bet</label>
+            <input type="number" name="enter" id="enter" placeholder="Enter bet amount">
+            <button onclick="rollDice()">Submit</button>
+        </div>
+        <div class="dice">
+            <img id="dice1" src="../assets/dice1.png" alt="Dice 1">
+            <img id="dice2" src="../assets/dice1.png" alt="Dice 2">
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <audio id="dice-sound" src="../assets/diceroll.mp3" preload="auto"></audio>
+
+    <script>
+        let guess = "";
+        let wallet = 100;
+
+        function updateWallet() {
+            document.querySelector('.wallet').innerText = `Wallet: Rs.${wallet}`;
+        }
+
+        function resetChoices() {
+            document.getElementsByClassName('seven-up')[0].style.display = 'flex';
+            document.getElementsByClassName('seven')[0].style.display = 'flex';
+            document.getElementsByClassName('seven-down')[0].style.display = 'flex';
+            guess = "";
+        }
+
+        document.getElementsByClassName('seven-up')[0].addEventListener('click', function () {
+            guess = "above";
+            this.style.display = 'block';
+            document.getElementsByClassName('seven')[0].style.display = 'none';
+            document.getElementsByClassName('seven-down')[0].style.display = 'none';
+        });
+
+        document.getElementsByClassName('seven')[0].addEventListener('click', function () {
+            guess = "exact";
+            this.style.display = 'block';
+            document.getElementsByClassName('seven-up')[0].style.display = 'none';
+            document.getElementsByClassName('seven-down')[0].style.display = 'none';
+        });
+
+        document.getElementsByClassName('seven-down')[0].addEventListener('click', function () {
+            guess = "below";
+            this.style.display = 'block';
+            document.getElementsByClassName('seven-up')[0].style.display = 'none';
+            document.getElementsByClassName('seven')[0].style.display = 'none';
+        });
+
+        function rollDice() {
+            if (guess === "") {
+                alert("Please select 7 Up, 7, or 7 Down.");
+                return;
+            }
+
+            const bet = parseInt(document.getElementById("enter").value);
+            if (isNaN(bet) || bet <= 0) {
+                alert("Enter a valid bet amount.");
+                return;
+            }
+
+            if (bet > wallet) {
+                alert("You don't have enough balance.");
+                return;
+            }
+
+            const audio = document.getElementById("dice-sound");
+            audio.currentTime = 0;
+            audio.play();
+
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const sum = d1 + d2;
+
+            document.getElementById("dice1").src = `../assets/dice${d1}.png`;
+            document.getElementById("dice2").src = `../assets/dice${d2}.png`;
+
+            let resultText = `You rolled ${d1} + ${d2} = ${sum}. `;
+            if ((sum > 7 && guess === "above") ||
+                (sum < 7 && guess === "below") ||
+                (sum === 7 && guess === "exact")) {
+                resultText += "You Won!";
+                wallet += bet;
+            } else {
+                resultText += "You Lose!";
+                wallet -= bet;
+            }
+
+            updateWallet();
+            document.getElementById("result").innerText = resultText;
+            resetChoices();
+        }
+    </script>
+</body>
+
+</html>
